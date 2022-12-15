@@ -1,0 +1,14 @@
+
+Получение списка новостей
+SELECT * FROM sd67f523gj_posts
+LEFT JOIN sd67f523gj_term_relationships ON
+(sd67f523gj_posts.ID = sd67f523gj_term_relationships.object_id)
+LEFT JOIN sd67f523gj_term_taxonomy ON
+(sd67f523gj_term_relationships.term_taxonomy_id = sd67f523gj_term_taxonomy.term_taxonomy_id)
+WHERE sd67f523gj_posts.post_type = 'post'
+AND sd67f523gj_term_taxonomy.taxonomy = 'category'
+AND sd67f523gj_term_taxonomy.term_id = 21
+ORDER BY post_date DESC
+
+Получение конкретной новости
+SELECT * FROM sd67f523gj_posts WHERE sd67f523gj_posts.ID = '2'

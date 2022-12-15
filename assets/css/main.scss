@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+body.overlay {
+    overflow: hidden;
+}
+
+.layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main{
+    flex-grow: 1;
+}
+
+@import './modal/modal.scss';
+@import './editor//editor';

@@ -1,0 +1,49 @@
+.app-modal {
+  position: relative;
+
+  &__dialog {
+    z-index: 20;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__container {
+    margin: 1.75rem auto;
+    background-color: #ffffff;
+    // min-height: 80px;
+  }
+
+  &__overlay {
+    position: fixed;
+    background: #000000;
+    opacity: 0.45;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .modal-container {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    &__body{
+        padding-top: 1rem;
+    }
+    &_md {
+      width: 500px;
+    }
+    &_lg {
+      width: 640px;
+    }
+    &_xl {
+      width: 800px;
+    }
+  }
+}
