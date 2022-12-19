@@ -6,6 +6,6 @@ export default defineNuxtConfig({
     // ['cookie-universal-nuxt', { alias: 'cookiz' }],
   ],
   runtimeConfig: {
-    authKey: 'AIzaSyCcFderO-gm1_ki1Z1UhzpGfh0AXY9OKkw'
+    authKey: process.env.AUTH_KEY,
   }
 });
