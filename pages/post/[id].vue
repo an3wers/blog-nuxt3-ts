@@ -12,11 +12,13 @@
       <!-- comments -->
       <div class="card text-bg-light">
         <div class="card-body">
-          <AddPostComment />
-          <CommentsListClient
-            v-if="postComments.length"
-            :comments="postComments"
-          />
+          <AddPostComment :postId="post?.id" />
+          <template v-if="post?.id">
+            <CommentsListClient
+              v-if="getCommentsByPostId(post.id).length"
+              :comments="getCommentsByPostId(post.id)"
+            />
+          </template>
         </div>
       </div>
     </div>
@@ -28,40 +30,24 @@ import AddPostComment from "~~/components/Commets/AddPostComment.vue";
 import PageLoader from "~~/components/UI/Loader/PageLoader.vue";
 import type { IPost } from "~~/types/posts";
 import CommentsListClient from "~~/components/Commets/CommentsListClient.vue";
-import type { IComment } from "~~/types/comments";
+// import type { IComment } from "~~/types/comments";
+import { useCommetsStroe } from "~~/store/comments";
 
 const route = useRoute();
-const postComments = ref<IComment[] | []>([]);
+// const postComments = ref<IComment[] | []>([]);
+const { getCommentsByPostId, fetchComments } = useCommetsStroe();
 
 const id = route.params.id;
-const { pending: pPending, data: post } = useLazyAsyncData<IPost>("post", () =>
-  $fetch(
-    `https://blog-nuxtjs-c3952-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${id}.json`,
-    {
-      method: "get",
-    }
-  )
+const { pending: pPending, data: post } = useLazyAsyncData<IPost | null>(
+  "post",
+  () =>
+    $fetch(
+      `https://blog-nuxtjs-c3952-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${id}.json`,
+      {
+        method: "get",
+      }
+    )
 );
 
-async function fetchComments() {
-  try {
-    const res: any = await $fetch(
-      "https://blog-nuxtjs-c3952-default-rtdb.asia-southeast1.firebasedatabase.app/comments.json"
-    );
-
-    const data: IComment[] = Object.values(res);
-    // console.log("comments", Object.values(res));
-    postComments.value = filteredComments(data, id);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-function filteredComments(arr: IComment[], id: string | string[]): IComment[] {
-  const result = arr.filter((el) => el.postId === id && el.publish);
-
-  return result;
-}
-
-fetchComments();
+await fetchComments();
 </script>

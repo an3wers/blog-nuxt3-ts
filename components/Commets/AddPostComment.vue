@@ -31,14 +31,23 @@
       </div>
     </div>
     <!-- text field for user email -->
-    <button :disabled="!isBtnActive || isSubmiting" class="btn btn-primary">
+    <button
+      :disabled="!isBtnActive || isSubmiting"
+      @click="addPostHandler"
+      class="btn btn-primary"
+    >
       Add comment<span v-if="isSubmiting">...</span>
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useCommetsStroe } from "~~/store/comments";
+import { IComment } from "~~/types/comments";
+
 const isEmailAndNameVisible = ref(false);
+const { addComment } = useCommetsStroe();
+const props = defineProps<{ postId: string | undefined }>();
 
 const commentVal = ref("");
 const emailVal = ref("");
@@ -51,9 +60,27 @@ function handleFocusCommentField(): void {
 }
 
 const isBtnActive = computed(() => {
-  return !!commentVal.value && !!emailVal.value && !!nameVal.value; // all true
+  return !!commentVal.value && !!emailVal.value && !!nameVal.value; // all to be true
 });
 
-
-
+async function addPostHandler() {
+  if (props.postId) {
+    isSubmiting.value = true;
+    const comment: IComment = {
+      email: emailVal.value,
+      name: nameVal.value,
+      postId: props.postId,
+      createdAt: new Date(),
+      text: commentVal.value,
+      publish: false,
+    };
+    await addComment(comment);
+    commentVal.value = "";
+    emailVal.value = "";
+    nameVal.value = "";
+  } else {
+    throw new Error("Post add failed");
+  }
+  isSubmiting.value = false;
+}
 </script>
