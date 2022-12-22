@@ -2,10 +2,11 @@
 export default defineNuxtConfig({
   css: ["@/assets/css/main.scss"],
   modules: [
-    '@pinia/nuxt',
+    "@pinia/nuxt",
+    "nuxt-lodash",
     // ['cookie-universal-nuxt', { alias: 'cookiz' }],
   ],
   runtimeConfig: {
     authKey: process.env.AUTH_KEY,
-  }
+  },
 });

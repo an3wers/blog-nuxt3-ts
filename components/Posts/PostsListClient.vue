@@ -30,6 +30,9 @@ interface PostsListProps {
   posts: IPost[];
 }
 defineProps<PostsListProps>();
+
+
+
 </script>
 
 <style scoped>
