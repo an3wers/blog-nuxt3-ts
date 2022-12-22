@@ -26,22 +26,26 @@ import { storeToRefs } from "pinia";
 const postsStore = usePostsStore();
 const { fetchPosts } = usePostsStore();
 const { posts } = storeToRefs(postsStore);
+const router = useRouter();
+const route = useRoute()
 
 await fetchPosts();
-
-const router = useRouter();
 
 const inputValue = ref("");
 const serchValue = ref("");
 
+if ('search' in route.query) {
+  inputValue.value = String(route.query.search) 
+  serchValue.value = String(route.query.search) 
+}
 const deb = useDebounce(setSearchValue, 1000);
 
 function inputHandler() {
-  deb();
+  deb(inputValue.value);
 }
 
-function setSearchValue() {
-  serchValue.value = inputValue.value;
+function setSearchValue(value: string) {
+  serchValue.value = value;
   if (serchValue.value) {
     router.replace(`?search=${serchValue.value}`);
   } else {
