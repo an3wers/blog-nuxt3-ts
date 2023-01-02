@@ -1,7 +1,23 @@
-import { defineStore } from "pinia";
-import type { IUser, IUserSet } from "~~/types/user";
+import { defineStore } from 'pinia';
+import type { IUser, IUserSet } from '~~/types/user';
 
-export const useAuthStore = defineStore("auth", {
+interface ResponseLogin {
+  displayName?: string;
+  email?: string;
+  expiresIn?: string;
+  idToken?: string;
+  kind?: string;
+  localId?: string;
+  refreshToken?: string;
+  registered?: boolean;
+  error?: {
+    code: number;
+    errors: Array<{}>;
+    message: string;
+  };
+}
+
+export const useAuthStore = defineStore('auth', {
   state: () => {
     return {
       user: null as IUser | null,
@@ -19,27 +35,27 @@ export const useAuthStore = defineStore("auth", {
       // const config = useRuntimeConfig()
       // console.log(process.env.AUTH_KEY)
       // console.log(config.test)
-      const key = "AIzaSyCcFderO-gm1_ki1Z1UhzpGfh0AXY9OKkw";
+      const key = 'AIzaSyCcFderO-gm1_ki1Z1UhzpGfh0AXY9OKkw';
       try {
         // any??
-        const res: any = await $fetch(
+        const res: ResponseLogin = await $fetch(
           `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${key}`,
           {
-            method: "post",
+            method: 'post',
             body: {
               ...authData,
               returnSecureToken: true,
             },
           }
         );
-        // console.log(res);
-        const token = useCookie("token", { sameSite: "none", secure: true });
+        // console.log('login', res);
+        const token = useCookie('token', { sameSite: 'none', secure: true });
         if (res.localId) {
-          this.user = { token: res.idToken };
-          token.value = res.idToken;
+          this.user = { token: res.idToken || '' };
+          token.value = res.idToken || null;
           this.authError = false;
         } else {
-          console.log("Error res", res);
+          console.log('Error res', res);
         }
       } catch (error) {
         console.log(error);
@@ -48,20 +64,20 @@ export const useAuthStore = defineStore("auth", {
     },
     logout() {
       this.user = null;
-      const token = useCookie("token", { sameSite: "none", secure: true });
+      const token = useCookie('token', { sameSite: 'none', secure: true });
       if (token.value) {
         token.value = null;
       }
     },
-    checkAuth(payload: string | undefined) {
+    checkAuth(payload: string | null) {
       if (payload) {
-        let token = "";
-        const tmpToken = payload.split(";").map((el) => {
-          return el.split("=");
+        let token = '';
+        const tmpToken = payload.split(';').map((el) => {
+          return el.split('=');
         });
-        
+
         tmpToken.forEach((el) => {
-          if (el[0].trim() == "token") {
+          if (el[0].trim() == 'token') {
             token = el[1];
           }
         });
@@ -69,7 +85,7 @@ export const useAuthStore = defineStore("auth", {
         this.user = { token: token };
       } else {
         // console.log(123)
-        const token = useCookie("token", { sameSite: "none", secure: true });
+        const token = useCookie('token', { sameSite: 'none', secure: true });
         if (token.value) {
           this.user = { token: token.value };
         } else {

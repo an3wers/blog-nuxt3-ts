@@ -6,7 +6,7 @@
           xmlns="http://www.w3.org/2000/svg"
           width="16"
           height="16"
-          fill="currentColor" 
+          fill="currentColor"
           class="bi bi-arrow-left"
           viewBox="0 0 16 16"
         >
@@ -24,36 +24,44 @@
         <div v-if="pending">
           <PageLoader />
         </div>
-        <PostForm v-if="(post && !pending)" :edit-post="post" @form-submin="submitHandler" />
+        <PostForm
+          v-if="post && !pending"
+          :edit-post="{ ...post, id: id }"
+          @form-submin="submitHandler"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { IPost, IPostUpdate } from "~~/types/posts";
-import PostForm from "~~/components/Admin/PostForm.vue";
-import { usePostsStore } from "~~/store/posts";
-import { storeToRefs } from "pinia";
-import PageLoader from "~~/components/UI/Loader/PageLoader.vue";
+import { IPostUpdate, IPostFetch } from '~~/types/posts';
+import PostForm from '~~/components/Admin/PostForm.vue';
+import { usePostsStore } from '~~/store/posts';
+import { storeToRefs } from 'pinia';
+import PageLoader from '~~/components/UI/Loader/PageLoader.vue';
 
 definePageMeta({
-  layout: "admin",
-  middleware: "auth",
+  layout: 'admin',
+  middleware: 'auth',
 });
 
-const { getPostById, editPost } = usePostsStore();
+const { editPost } = usePostsStore();
 const postsStore = usePostsStore();
 const { isSubmitingError } = storeToRefs(postsStore);
 
 const route = useRoute();
 
-const id = route.params.id;
-const { pending, data: post } = useLazyAsyncData<IPost>("post", () =>
+let id: string;
+typeof route.params.id === 'string'
+  ? (id = route.params.id)
+  : (id = route.params.id[0]);
+
+const { pending, data: post } = useLazyAsyncData<IPostFetch>('post', () =>
   $fetch(
     `https://blog-nuxtjs-c3952-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${id}.json`,
     {
-      method: "get",
+      method: 'get',
     }
   )
 );
@@ -61,7 +69,7 @@ const { pending, data: post } = useLazyAsyncData<IPost>("post", () =>
 async function submitHandler(post: IPostUpdate) {
   await editPost(post);
   if (!isSubmitingError.value) {
-    navigateTo("/admin");
+    navigateTo('/admin');
   }
 }
 </script>

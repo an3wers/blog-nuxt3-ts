@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
-import type { IPost, IPostAdd, IPostUpdate } from "~~/types/posts";
-import { useAuthStore } from "./auth";
+import { defineStore } from 'pinia';
+import type { IPost, IPostAdd, IPostUpdate } from '~~/types/posts';
+import { useAuthStore } from './auth';
 
-export const usePostsStore = defineStore("posts", {
+export const usePostsStore = defineStore('posts', {
   state: () => {
     return {
       posts: [] as IPost[],
@@ -11,23 +11,28 @@ export const usePostsStore = defineStore("posts", {
     };
   },
   getters: {
-    getPostById: (state) => (postId: string | string[]) => {
+    getPostById: (state) => (postId: string) => {
       return state.posts.find((el) => el.id === postId);
     },
   },
   actions: {
     async fetchPosts() {
-      const tmpArr = [];
+      const tmpArr: IPost[] = [];
       try {
         const res: any = await $fetch(
-          "https://blog-nuxtjs-c3952-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json",
+          'https://blog-nuxtjs-c3952-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json',
           {
-            method: "get",
+            method: 'get',
           }
         );
+        // console.log('Posts', res);
         if (res) {
-          for (let key in res) {
-            tmpArr.push({ ...res[key] });
+          const keys: Array<string> = Object.keys(res);
+          // console.log('keys', keys);
+          if (keys.length) {
+            keys.forEach((key) => {
+              tmpArr.push({ ...res[key], id: key });
+            });
           }
         }
         this.posts = tmpArr;
@@ -40,36 +45,21 @@ export const usePostsStore = defineStore("posts", {
       try {
         this.isSubmitPost = true;
         this.isSubmitingError = null;
-        const res: any = await $fetch(
+        const res: { name: string } | null = await $fetch(
           `https://blog-nuxtjs-c3952-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json?auth=${authStore.user?.token}`,
           {
-            method: "post",
+            method: 'post',
             body: post,
           }
         );
-        // add post id to firebase
-        await this.setId({ ...post, id: res.name });
-        
-        this.posts.push({ ...post, id: res.name });
+        if (res) {
+          this.posts.push({ ...post, id: res.name });
+        }
       } catch (error: any) {
         console.log(error.message);
         this.isSubmitingError = error.message;
       } finally {
         this.isSubmitPost = false;
-      }
-    },
-    async setId(post: IPost) {
-      const authStore = useAuthStore();
-      try {
-        await $fetch(
-          `https://blog-nuxtjs-c3952-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${post.id}.json?auth=${authStore.user?.token}`,
-          {
-            method: "put",
-            body: post,
-          }
-        );
-      } catch (error: any) {
-        console.log(error.message);
       }
     },
     async editPost(post: IPostUpdate) {
@@ -80,7 +70,7 @@ export const usePostsStore = defineStore("posts", {
         const res: any = await $fetch(
           `https://blog-nuxtjs-c3952-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${post.id}.json?auth=${authStore.user?.token}`,
           {
-            method: "put",
+            method: 'put',
             body: post,
           }
         );
@@ -100,7 +90,7 @@ export const usePostsStore = defineStore("posts", {
         const res: any = await $fetch(
           `https://blog-nuxtjs-c3952-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${post.id}.json?auth=${authStore.user?.token}`,
           {
-            method: "delete",
+            method: 'delete',
           }
         );
         this.posts = this.posts.filter((el) => el.id !== post.id);

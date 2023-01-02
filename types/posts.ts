@@ -1,22 +1,29 @@
 export interface IPost {
-    id: string,
-    content: string,
-    descr: string,
-    imgUrl: string,
-    title: string,
+  id: string;
+  content: string;
+  descr: string;
+  imgUrl: string;
+  title: string;
 }
 
 export interface IPostAdd {
-    content: string,
-    descr: string,
-    imgUrl: string,
-    title: string,
+  content: string;
+  descr: string;
+  imgUrl: string;
+  title: string;
 }
 
 export interface IPostUpdate {
-    content: string,
-    descr: string,
-    imgUrl: string,
-    title: string,
-    id?: string
+  content: string;
+  descr: string;
+  imgUrl: string;
+  title: string;
+  id?: string;
+}
+
+export interface IPostFetch {
+  content: string;
+  descr: string;
+  imgUrl: string;
+  title: string;
 }
