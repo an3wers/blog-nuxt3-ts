@@ -26,12 +26,13 @@
     </li>
   </ul>
   <PostsListAdmin v-if="adminMode === 'posts'" />
-  <div v-if="adminMode === 'comments'">Comments</div>
+  <CommentsListAdmin v-if="adminMode === 'comments'" />
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import PostsListAdmin from "~~/components/Posts/PostsListAdmin.vue";
+import CommentsListAdmin from "~~/components/Commets/CommentsListAdmin.vue";
 import { usePostsStore } from '~~/store/posts'
 
 definePageMeta({
@@ -39,10 +40,12 @@ definePageMeta({
   middleware: "auth",
 });
 
-const { fetchPosts } = usePostsStore()
-const adminMode = ref("posts"); // posts / comments
+type Mode = "posts" | "comments"
 
-function tabsHandler(mode: "posts" | "comments") {
+const { fetchPosts } = usePostsStore()
+const adminMode = ref<Mode>("posts"); // posts / comments
+
+function tabsHandler(mode: Mode) {
   adminMode.value = mode;
 }
 

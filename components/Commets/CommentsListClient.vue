@@ -9,7 +9,7 @@
             {{item.text}}
           </p>
           <p class="card-text">
-            <small class="text-muted">{{item.createdAt}}</small>
+            <small class="text-muted">{{useDateToLocalString(item.createdAt)}}</small>
           </p>
         </div>
       </div>

@@ -12,11 +12,11 @@
       <!-- comments -->
       <div class="card text-bg-light">
         <div class="card-body">
-          <AddPostComment :postId="post?.id" />
-          <template v-if="post?.id">
+          <AddPostComment :postId="id" />
+          <template v-if="id">
             <CommentsListClient
-              v-if="getCommentsByPostId(post.id).length"
-              :comments="getCommentsByPostId(post.id)"
+              v-if="getCommentsByPostId(id).length"
+              :comments="getCommentsByPostId(id)"
             />
           </template>
         </div>
@@ -31,13 +31,14 @@ import PageLoader from "~~/components/UI/Loader/PageLoader.vue";
 import type { IPost } from "~~/types/posts";
 import CommentsListClient from "~~/components/Commets/CommentsListClient.vue";
 // import type { IComment } from "~~/types/comments";
-import { useCommetsStroe } from "~~/store/comments";
+import { useCommetsStore } from "~~/store/comments";
 
 const route = useRoute();
 // const postComments = ref<IComment[] | []>([]);
-const { getCommentsByPostId, fetchComments } = useCommetsStroe();
+const { getCommentsByPostId, fetchComments } = useCommetsStore();
 
-const id = route.params.id;
+let id: string
+typeof route.params.id === 'string' ? id = route.params.id : id = route.params.id[0];
 const { pending: pPending, data: post } = useLazyAsyncData<IPost | null>(
   "post",
   () =>

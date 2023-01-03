@@ -33,7 +33,7 @@
     <!-- text field for user email -->
     <button
       :disabled="!isBtnActive || isSubmiting"
-      @click="addPostHandler"
+      @click="addCommentHandler"
       class="btn btn-primary"
     >
       Add comment<span v-if="isSubmiting">...</span>
@@ -42,11 +42,11 @@
 </template>
 
 <script setup lang="ts">
-import { useCommetsStroe } from "~~/store/comments";
-import { IComment } from "~~/types/comments";
+import { useCommetsStore } from "~~/store/comments";
+import { IComment, ICommentNew } from "~~/types/comments";
 
 const isEmailAndNameVisible = ref(false);
-const { addComment } = useCommetsStroe();
+const { addComment } = useCommetsStore();
 const props = defineProps<{ postId: string | undefined }>();
 
 const commentVal = ref("");
@@ -63,10 +63,10 @@ const isBtnActive = computed(() => {
   return !!commentVal.value && !!emailVal.value && !!nameVal.value; // all to be true
 });
 
-async function addPostHandler() {
+async function addCommentHandler() {
   if (props.postId) {
     isSubmiting.value = true;
-    const comment: IComment = {
+    const comment: ICommentNew = {
       email: emailVal.value,
       name: nameVal.value,
       postId: props.postId,
@@ -79,7 +79,7 @@ async function addPostHandler() {
     emailVal.value = "";
     nameVal.value = "";
   } else {
-    throw new Error("Post add failed");
+    throw new Error("Comment adding failed");
   }
   isSubmiting.value = false;
 }
