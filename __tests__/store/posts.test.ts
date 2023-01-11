@@ -7,7 +7,7 @@ import {
   afterEach,
 } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
-import { usePostsStore } from "./posts";
+import { usePostsStore } from "../../store/posts";
 
 beforeAll(() => {
   setActivePinia(createPinia());

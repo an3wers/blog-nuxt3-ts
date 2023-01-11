@@ -7,7 +7,7 @@ import {
   afterEach,
 } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
-import { useAuthStore } from "./auth";
+import { useAuthStore } from "../../store/auth";
 
 // describe('runs', () => {
 //     test('it works', () => {
@@ -25,9 +25,11 @@ describe("Auth Store", () => {
   beforeEach(() => {
     authStore = useAuthStore();
   });
+  
   afterEach(() => {
     authStore.$reset();
   });
+
   test("create store", () => {
     expect(authStore).toBeDefined();
   });
@@ -40,10 +42,12 @@ describe("Auth Store", () => {
   test('getter isAuth boolean value', () => {
     expect(authStore.isAuth).toBeTypeOf("boolean")
   })
-//   not found useCookie ??
-//   test('logout user', () => {
-//     authStore.user = {token: '123'}
-//     authStore.logout()
-//     expect(authStore.user).toStrictEqual(null)
-//   })
+  // Проблема с useCookie()
+  // ReferenceError: useCookie is not defined
+  test.skip('logout user', () => {
+    authStore.user = {token: 'token'}
+    authStore.logout()
+    expect(authStore.user).toStrictEqual(null)
+  })
+
 });

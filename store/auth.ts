@@ -32,12 +32,8 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     async login(authData: IUserSet) {
-      // const config = useRuntimeConfig()
-      // console.log(process.env.AUTH_KEY)
-      // console.log(config.test)
       const key = 'AIzaSyCcFderO-gm1_ki1Z1UhzpGfh0AXY9OKkw';
       try {
-        // any??
         const res: ResponseLogin = await $fetch(
           `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${key}`,
           {
