@@ -30,19 +30,35 @@ describe("testFetch store", () => {
   test("create store", () => {
     expect(fetchStore).toBeDefined();
   });
+
   test("load user by id", async () => {
     const userId = "1";
     await fetchStore.fetchSwapiApi(userId);
     // console.log('User', fetchStore.user)
     expect(fetchStore.user).not.toBe(null);
   });
-  test("request", async () => {
+});
+
+// Mocking function
+describe("mocking fetch", () => {
+  let fetchStore: ReturnType<typeof useTestFetch>;
+
+  beforeAll(() => {
     global.fetch = vi.fn();
+  });
 
-    function createFetchResponse(data: any) {
-      return { json: () => new Promise((resolve) => resolve(data)) };
-    }
+  function createFetchResponse(data: any) {
+    return { json: () => new Promise((resolve) => resolve(data)) };
+  }
+  beforeEach(() => {
+    fetchStore = useTestFetch();
+  });
 
+  afterEach(() => {
+    fetchStore.$reset();
+  });
+
+  test("request", async () => {
     const userResponse = {
       name: "Luke Skywalker",
       height: "172",
@@ -74,7 +90,10 @@ describe("testFetch store", () => {
     };
 
     fetch.mockResolvedValue(createFetchResponse(userResponse));
+
     const user = await fetchStore.fetchSwapiApi("1");
+
     expect(user).toEqual(userResponse);
+    expect(fetch).toHaveBeenCalledWith('https://swapi.dev/api/people/1/')
   });
 });
