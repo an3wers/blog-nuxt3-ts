@@ -3,13 +3,7 @@
     <!-- top block -->
     <TopBlock />
     <!-- search -->
-    <input
-      type="text"
-      v-model="inputValue"
-      @input="inputHandler"
-      class="form-control"
-      placeholder="Search post..."
-    />
+    <SearchHome />
     <!-- post list -->
     <PostsListClient v-if="getFilteredPosts.length" :posts="getFilteredPosts" />
     <p v-else class="py-5 text-center">Posts not found</p>
@@ -22,42 +16,32 @@ import TopBlock from "~~/components/HomePage/TopBlock.vue";
 import PostsListClient from "~~/components/Posts/PostsListClient.vue";
 import { usePostsStore } from "~~/store/posts";
 import { storeToRefs } from "pinia";
+import SearchHome from "~~/components/Search/SearchHome.vue";
+import { useFiltersStore } from "~~/store/filters";
 
+const filterStore = useFiltersStore();
+const { searchValue } = storeToRefs(filterStore);
 const postsStore = usePostsStore();
 const { fetchPosts } = usePostsStore();
 const { posts } = storeToRefs(postsStore);
-const router = useRouter();
-const route = useRoute()
+const route = useRoute();
+
+if (Object.hasOwn(route.query, "search")) {
+  searchValue.value = String(route.query.search);
+}
 
 await fetchPosts();
-
-const inputValue = ref("");
-const serchValue = ref("");
-
-if ('search' in route.query) {
-  inputValue.value = String(route.query.search) 
-  serchValue.value = String(route.query.search) 
-}
-const deb = useDebounce(setSearchValue, 1000);
-
-function inputHandler() {
-  deb(inputValue.value);
-}
-
-function setSearchValue(value: string) {
-  serchValue.value = value;
-  if (serchValue.value) {
-    router.replace(`?search=${serchValue.value}`);
-  } else {
-    router.replace({ query: undefined });
-  }
-}
 
 const getFilteredPosts = computed(() => {
   return posts.value.filter((post) =>
     post.title
       .toLocaleLowerCase()
-      .includes(serchValue.value.toLocaleLowerCase())
+      .includes(searchValue.value.toLocaleLowerCase())
   );
 });
+
+onUnmounted(() => {
+  searchValue.value = ''
+})
+
 </script>

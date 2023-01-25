@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 useHead({
   link: [
     {
@@ -16,4 +16,5 @@ useHead({
     },
   ],
 });
+
 </script>

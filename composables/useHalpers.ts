@@ -9,6 +9,6 @@ export const useDateToLocalString = (date: Date | string, local = 'ru-Ru'): stri
       return "";
     }
   } else {
-    return date.toLocaleDateString(local) || "";
+    return date ? date.toLocaleDateString(local) : "";
   }
 };
