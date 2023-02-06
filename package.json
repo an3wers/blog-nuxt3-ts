@@ -10,21 +10,22 @@
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@nuxt/test-utils": "^3.0.0",
-    "@vitest/coverage-c8": "^0.25.5",
-    "nuxt": "3.0.0",
-    "vitest": "^0.25.5"
+    "@nuxt/test-utils": "^3.1.1",
+    "@vitest/coverage-c8": "^0.28.3",
+    "nuxt": "3.1.1",
+    "vitest": "^0.28.3"
   },
   "dependencies": {
-    "@nuxt/test-utils-edge": "^3.0.1-rc.0-27828744.aa9aec1",
+    "@nuxt/test-utils-edge": "^3.1.2-rc.0-27918586.b7591e6",
     "@pinia/nuxt": "^0.4.6",
-    "@tiptap/starter-kit": "^2.0.0-beta.207",
-    "@tiptap/vue-3": "^2.0.0-beta.207",
+    "@tiptap/starter-kit": "^2.0.0-beta.209",
+    "@tiptap/vue-3": "^2.0.0-beta.209",
     "cookie-universal-nuxt": "^2.2.2",
     "mysql2": "^2.3.3",
+    "npm-check-updates": "^16.6.3",
     "nuxt-lodash": "^2.4.1",
-    "pinia": "^2.0.27",
-    "sass": "^1.56.1",
+    "pinia": "^2.0.29",
+    "sass": "^1.57.1",
     "ssh2": "^1.11.0",
     "tunnel-ssh": "^4.1.6"
   }
